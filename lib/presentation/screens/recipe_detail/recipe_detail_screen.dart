@@ -100,7 +100,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
                       expandedHeight: 260,
                       pinned: true,
                       leading: IconButton(
-                        onPressed: () => context.pop(),
+                        onPressed: () {
+                          if (context.canPop()) {
+                            context.pop();
+                          } else {
+                            context.go('/home');
+                          }
+                        },
                         icon: const Icon(Icons.arrow_back),
                       ),
                       actions: [
@@ -119,7 +125,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
-                            errorWidget: (_, __, ___) => Container(
+                            errorWidget: (_, _, _) => Container(
                               color: AppColors.border,
                               child: const Icon(Icons.broken_image_outlined),
                             ),
@@ -236,7 +242,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: similar.length,
-                                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                                separatorBuilder: (_, _) => const SizedBox(width: 8),
                                 itemBuilder: (context, index) {
                                   final item = similar[index];
                                   return SizedBox(

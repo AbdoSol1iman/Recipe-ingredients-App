@@ -72,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: provider.suggestions.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final suggestion = provider.suggestions[index];
                       return ActionChip(
@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 isSaved: isSaved,
                                 onSaveTap: () =>
                                     context.read<SavedProvider>().toggleSaved(recipe),
-                                onTap: () => context.go('/detail/${recipe.id}', extra: recipe),
+                                onTap: () => context.push('/detail/${recipe.id}', extra: recipe),
                               );
                             },
                           ),
@@ -140,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemBuilder: (_, __) => Shimmer.fromColors(
+      itemBuilder: (_, _) => Shimmer.fromColors(
         baseColor: AppColors.border,
         highlightColor: Colors.white,
         child: Container(
@@ -183,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
-                    value: selectedDiet.isEmpty ? null : selectedDiet,
+                    initialValue: selectedDiet.isEmpty ? null : selectedDiet,
                     decoration: const InputDecoration(labelText: 'Diet'),
                     items: const [
                       DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian')),

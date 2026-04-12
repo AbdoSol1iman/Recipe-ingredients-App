@@ -58,7 +58,7 @@ class SavedScreen extends StatelessWidget {
                     heroTag: 'recipe_${recipe.id}',
                     isSaved: true,
                     onSaveTap: () => provider.removeSaved(recipe.id),
-                    onTap: () => context.go('/detail/${recipe.id}', extra: recipe),
+                    onTap: () => context.push('/detail/${recipe.id}', extra: recipe),
                   ),
                 );
               },

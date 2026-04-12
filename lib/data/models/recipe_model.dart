@@ -1,4 +1,3 @@
-import '../models/recipe_detail_model.dart';
 
 class RecipeModel {
   const RecipeModel({

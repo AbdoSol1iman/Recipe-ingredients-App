@@ -1,6 +1,6 @@
 <div align="center">
 
-# Recipely
+# Wasfty
 
 ### A Modern Flutter Recipe Discovery App
 
@@ -22,7 +22,7 @@
 ## Hero Banner
 
 <p align="center">
-  <img src="docs/images/hero-banner.png" alt="Recipely Hero Banner" width="900"/>
+  <img src="docs/images/hero-banner.png" alt="Wasfty Hero Banner" width="900"/>
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ A smooth recipe experience helps users:
 
 ### Our Solution
 
-**Recipely** is a Flutter app designed for a complete recipe journey:
+**Wasfty** is a Flutter app designed for a complete recipe journey:
 
 - Onboarding and splash flow
 - Home feed with categories and recommendations
@@ -188,7 +188,7 @@ flutter run
 ### App Architecture Diagram
 
 <p align="center">
-  <img src="docs/images/architecture-diagram.png" alt="Recipely Architecture" width="760"/>
+  <img src="docs/images/architecture-diagram.png" alt="Wasfty Architecture" width="760"/>
   <br/>
   <em>TODO: Replace with your architecture diagram screenshot.</em>
 </p>
@@ -196,7 +196,7 @@ flutter run
 ### Component Overview
 
 ```text
-Recipely (Flutter)
+Wasfty (Flutter)
 ├── core/
 │   ├── constants/
 │   └── theme/

@@ -45,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('About'),
-            subtitle: Text('Recipely v1.0.0'),
+            subtitle: Text('Wasfty v1.0.0'),
           ),
         ],
       ),
@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (_) => AlertDialog(
         title: const Text('Default Diet Preference'),
         content: DropdownButtonFormField<String>(
-          value: selected.isEmpty ? null : selected,
+          initialValue: selected.isEmpty ? null : selected,
           items: const [
             DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian')),
             DropdownMenuItem(value: 'vegan', child: Text('Vegan')),

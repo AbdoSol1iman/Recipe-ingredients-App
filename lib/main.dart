@@ -28,18 +28,18 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => SearchProvider(repository)),
         ChangeNotifierProvider(create: (_) => SavedProvider(savedBox)),
       ],
-      child: const RecipelyApp(),
+      child: const WasftyApp(),
     ),
   );
 }
 
-class RecipelyApp extends StatelessWidget {
-  const RecipelyApp({super.key});
+class WasftyApp extends StatelessWidget {
+  const WasftyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Recipely',
+      title: 'Wasfty',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: AppRouter.router,

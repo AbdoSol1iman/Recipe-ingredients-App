@@ -1,4 +1,3 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
   static const String baseUrl = 'https://www.themealdb.com/api/json/v1/1';

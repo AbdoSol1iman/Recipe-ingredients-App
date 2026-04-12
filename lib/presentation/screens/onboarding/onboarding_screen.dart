@@ -20,17 +20,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'title': 'Discover tasty recipes',
       'subtitle': 'Find meal ideas from a large collection curated for you.',
-      'emoji': '🍲',
     },
     {
       'title': 'Cook with confidence',
       'subtitle': 'See ingredients, step-by-step instructions, and nutrition.',
-      'emoji': '👩‍🍳',
     },
     {
       'title': 'Save your favorites',
       'subtitle': 'Bookmark recipes and quickly access them anytime.',
-      'emoji': '❤️',
     },
   ];
 
@@ -59,7 +56,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(slide['emoji']!, style: const TextStyle(fontSize: 92)),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Image.asset(
+                            'assets/images/app_logo.png',
+                            width: 108,
+                            height: 108,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         const SizedBox(height: 32),
                         Text(
                           slide['title']!,

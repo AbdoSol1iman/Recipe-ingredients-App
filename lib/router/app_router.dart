@@ -14,12 +14,12 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: '/',
     routes: [
-      GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
-      GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-      GoRoute(path: '/home', pageBuilder: (_, __) => _fade(const HomeScreen())),
-      GoRoute(path: '/search', pageBuilder: (_, __) => _fade(const SearchScreen())),
-      GoRoute(path: '/saved', pageBuilder: (_, __) => _fade(const SavedScreen())),
-      GoRoute(path: '/profile', pageBuilder: (_, __) => _fade(const ProfileScreen())),
+      GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
+      GoRoute(path: '/home', pageBuilder: (_, _) => _fade(const HomeScreen())),
+      GoRoute(path: '/search', pageBuilder: (_, _) => _fade(const SearchScreen())),
+      GoRoute(path: '/saved', pageBuilder: (_, _) => _fade(const SavedScreen())),
+      GoRoute(path: '/profile', pageBuilder: (_, _) => _fade(const ProfileScreen())),
       GoRoute(
         path: '/detail/:id',
         pageBuilder: (context, state) {
@@ -34,7 +34,7 @@ class AppRouter {
   static CustomTransitionPage<void> _fade(Widget child) {
     return CustomTransitionPage<void>(
       child: child,
-      transitionsBuilder: (_, animation, __, c) =>
+      transitionsBuilder: (_, animation, _, c) =>
           FadeTransition(opacity: animation, child: c),
     );
   }
@@ -42,7 +42,7 @@ class AppRouter {
   static CustomTransitionPage<void> _slide(Widget child) {
     return CustomTransitionPage<void>(
       child: child,
-      transitionsBuilder: (_, animation, __, c) {
+      transitionsBuilder: (_, animation, _, c) {
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0, 0.06),

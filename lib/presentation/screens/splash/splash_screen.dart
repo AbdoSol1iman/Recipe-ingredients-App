@@ -50,10 +50,16 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: const Icon(Icons.restaurant_menu, color: Colors.white, size: 42),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  'assets/images/app_logo.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            Text('Recipely', style: AppTextStyles.heading1),
+            Text('Wasfty', style: AppTextStyles.heading1),
           ],
         ),
       ),

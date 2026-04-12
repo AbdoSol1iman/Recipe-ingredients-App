@@ -30,7 +30,7 @@ class RecipeCard extends StatelessWidget {
         height: 120,
         width: double.infinity,
         fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => Container(
+        errorWidget: (_, _, _) => Container(
           color: AppColors.border,
           child: const Icon(Icons.broken_image_outlined),
         ),

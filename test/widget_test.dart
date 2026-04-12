@@ -11,10 +11,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wasftk/presentation/screens/splash/splash_screen.dart';
 
 void main() {
-  testWidgets('Recipely splash renders', (WidgetTester tester) async {
+  testWidgets('Wasfty splash renders', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: SplashScreen()));
 
-    expect(find.text('Recipely'), findsOneWidget);
-    expect(find.byIcon(Icons.restaurant_menu), findsOneWidget);
+    expect(find.text('Wasfty'), findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
   });
 }

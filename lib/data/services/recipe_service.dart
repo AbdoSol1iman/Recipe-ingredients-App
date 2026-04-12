@@ -8,9 +8,7 @@ import '../models/recipe_model.dart';
 
 class AppException implements Exception {
   const AppException(this.message);
-
   final String message;
-
   @override
   String toString() => message;
 }
@@ -18,22 +16,28 @@ class AppException implements Exception {
 class RecipeService {
   final http.Client _client = http.Client();
 
-  void _validateApiKey() {
-    // TheMealDB requires no API key
-  }
-
   Future<List<RecipeModel>> getPopularRecipes({String? type}) async {
     try {
-      _validateApiKey();
-      final response = await _client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.randomPath}'),
-        headers: ApiConstants.headers,
-      );
+      if (type != null && type.isNotEmpty && type != 'All') {
+        final category = _categoryToApi(type);
+        final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.filterPath}')
+            .replace(queryParameters: {'c': category});
+
+        final response = await _client.get(uri, headers: ApiConstants.headers);
+        _throwIfError(response);
+
+        final meals = _extractMeals(response.body);
+        return meals.take(10).map(RecipeModel.fromJson).toList();
+      }
+
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.searchPath}')
+          .replace(queryParameters: {'s': ''});
+
+      final response = await _client.get(uri, headers: ApiConstants.headers);
       _throwIfError(response);
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      final meal = data['meals'] as List?;
-      if (meal == null || meal.isEmpty) return [];
-      return [RecipeModel.fromJson(meal[0] as Map<String, dynamic>)];
+
+      final meals = _extractMeals(response.body);
+      return meals.take(10).map(RecipeModel.fromJson).toList();
     } catch (e) {
       if (e is AppException) rethrow;
       throw AppException('Failed to load popular recipes: $e');
@@ -42,20 +46,26 @@ class RecipeService {
 
   Future<List<RecipeModel>> getRandomRecipes() async {
     try {
-      final List<RecipeModel> recipes = [];
-      for (int i = 0; i < 5; i++) {
-        final response = await _client.get(
-          Uri.parse('${ApiConstants.baseUrl}${ApiConstants.randomPath}'),
-          headers: ApiConstants.headers,
-        );
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.randomPath}');
+      final results = <RecipeModel>[];
+      final seen = <int>{};
+
+      while (results.length < 5) {
+        final response = await _client.get(uri, headers: ApiConstants.headers);
         _throwIfError(response);
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final meals = data['meals'] as List?;
-        if (meals != null && meals.isNotEmpty) {
-          recipes.add(RecipeModel.fromJson(meals[0] as Map<String, dynamic>));
+
+        final meals = _extractMeals(response.body);
+        if (meals.isEmpty) {
+          break;
+        }
+
+        final recipe = RecipeModel.fromJson(meals.first);
+        if (seen.add(recipe.id)) {
+          results.add(recipe);
         }
       }
-      return recipes;
+
+      return results;
     } catch (e) {
       if (e is AppException) rethrow;
       throw AppException('Failed to load recommended recipes: $e');
@@ -64,19 +74,18 @@ class RecipeService {
 
   Future<RecipeDetailModel> getRecipeDetail(int id) async {
     try {
-      final response = await _client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.lookupPath}').replace(
-          queryParameters: {'i': id.toString()},
-        ),
-        headers: ApiConstants.headers,
-      );
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.lookupPath}')
+          .replace(queryParameters: {'i': '$id'});
+
+      final response = await _client.get(uri, headers: ApiConstants.headers);
       _throwIfError(response);
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      final meals = data['meals'] as List?;
-      if (meals == null || meals.isEmpty) {
-        throw const AppException('Recipe not found');
+
+      final meals = _extractMeals(response.body);
+      if (meals.isEmpty) {
+        throw const AppException('Recipe not found.');
       }
-      return RecipeDetailModel.fromJson(meals[0] as Map<String, dynamic>);
+
+      return RecipeDetailModel.fromJson(meals.first);
     } catch (e) {
       if (e is AppException) rethrow;
       throw AppException('Failed to load recipe details: $e');
@@ -84,22 +93,26 @@ class RecipeService {
   }
 
   Future<List<RecipeModel>> searchRecipes(
-    String query, {
-    Map<String, dynamic> filters = const {},
-  }) async {
+      String query, {
+        Map<String, dynamic> filters = const {},
+      }) async {
     try {
-      final response = await _client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.searchPath}').replace(
-          queryParameters: {'s': query},
-        ),
-        headers: ApiConstants.headers,
-      );
+      Uri uri;
+      final cuisine = (filters['cuisine'] ?? '').toString().trim();
+      if (query.trim().isEmpty && cuisine.isNotEmpty) {
+        uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.filterPath}')
+            .replace(queryParameters: {'a': cuisine});
+      } else {
+        uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.searchPath}')
+            .replace(queryParameters: {'s': query.trim()});
+      }
+
+      final response = await _client.get(uri, headers: ApiConstants.headers);
       _throwIfError(response);
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      final meals = data['meals'] as List? ?? const [];
-      return meals
-          .map((e) => RecipeModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+
+      final meals = _extractMeals(response.body);
+      final mapped = meals.map(RecipeModel.fromJson).toList();
+      return mapped.take(20).toList();
     } catch (e) {
       if (e is AppException) rethrow;
       throw AppException('Failed to search recipes: $e');
@@ -109,46 +122,85 @@ class RecipeService {
   Future<List<String>> getAutocompleteSuggestions(String query) async {
     if (query.trim().isEmpty) return [];
     try {
-      final response = await _client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.searchPath}').replace(
-          queryParameters: {'s': query},
-        ),
-        headers: ApiConstants.headers,
-      );
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.searchPath}')
+          .replace(queryParameters: {'s': query});
+
+      final response = await _client.get(uri, headers: ApiConstants.headers);
       _throwIfError(response);
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      final meals = data['meals'] as List? ?? const [];
+
+      final meals = _extractMeals(response.body);
+      final lower = query.toLowerCase();
       return meals
           .map((e) => (e['strMeal'] ?? '').toString())
-          .where((e) => e.isNotEmpty)
+          .where((e) => e.isNotEmpty && e.toLowerCase().contains(lower))
+          .take(5)
           .toList();
     } catch (e) {
-      if (e is AppException) rethrow;
       return [];
     }
   }
 
   Future<List<RecipeModel>> getSimilarRecipes(int id) async {
     try {
-      final response = await _client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.randomPath}'),
-        headers: ApiConstants.headers,
-      );
+      final detail = await getRecipeDetail(id);
+      final category = detail.diets.isNotEmpty ? detail.diets.first : '';
+      if (category.isEmpty) {
+        return [];
+      }
+
+      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.filterPath}')
+          .replace(queryParameters: {'c': category});
+
+      final response = await _client.get(uri, headers: ApiConstants.headers);
       _throwIfError(response);
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      final meals = data['meals'] as List?;
-      if (meals == null || meals.isEmpty) return [];
-      return [RecipeModel.fromJson(meals[0] as Map<String, dynamic>)];
+
+      final meals = _extractMeals(response.body)
+          .map(RecipeModel.fromJson)
+          .where((recipe) => recipe.id != id)
+          .take(4)
+          .toList();
+      return meals;
     } catch (e) {
       if (e is AppException) rethrow;
       return [];
     }
   }
 
-  void _throwIfError(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return;
+  String _categoryToApi(String category) {
+    switch (category.toLowerCase()) {
+      case 'main course':
+        return 'Beef';
+      case 'breakfast':
+        return 'Breakfast';
+      case 'dessert':
+        return 'Dessert';
+      case 'salad':
+        return 'Vegetarian';
+      case 'soup':
+        return 'Starter';
+      default:
+        return category;
     }
-    throw AppException('Request failed (${response.statusCode}): ${response.body}');
+  }
+
+  List<Map<String, dynamic>> _extractMeals(String body) {
+    final data = jsonDecode(body) as Map<String, dynamic>;
+    final meals = data['meals'];
+    if (meals is! List) {
+      return const [];
+    }
+
+    return meals
+        .whereType<Map>()
+        .map((item) => item.map(
+              (key, value) => MapEntry(key.toString(), value),
+            ))
+        .toList();
+  }
+
+  void _throwIfError(http.Response response) {
+    if (response.statusCode >= 200 && response.statusCode < 300) return;
+    throw AppException(
+        'Request failed (${response.statusCode}): ${response.body}');
   }
 }

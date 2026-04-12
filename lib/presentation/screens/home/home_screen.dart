@@ -47,7 +47,21 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text('Hello, Foodie', style: AppTextStyles.heading2),
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      'assets/images/app_logo.png',
+                      width: 36,
+                      height: 36,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text('Hello, Foodie', style: AppTextStyles.heading2),
+                ],
+              ),
               const SizedBox(height: 14),
               GestureDetector(
                 onTap: () => context.go('/search'),
@@ -89,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: provider.popularRecipes.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 10),
+                    separatorBuilder: (_, _) => const SizedBox(width: 10),
                     itemBuilder: (context, index) {
                       final recipe = provider.popularRecipes[index];
                       final isSaved = context.watch<SavedProvider>().isSaved(recipe.id);
@@ -100,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           heroTag: 'recipe_${recipe.id}',
                           isSaved: isSaved,
                           onSaveTap: () => context.read<SavedProvider>().toggleSaved(recipe),
-                          onTap: () => context.go('/detail/${recipe.id}', extra: recipe),
+                          onTap: () => context.push('/detail/${recipe.id}', extra: recipe),
                         ),
                       );
                     },
@@ -122,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         heroTag: 'recipe_${recipe.id}',
                         isSaved: isSaved,
                         onSaveTap: () => context.read<SavedProvider>().toggleSaved(recipe),
-                        onTap: () => context.go('/detail/${recipe.id}', extra: recipe),
+                        onTap: () => context.push('/detail/${recipe.id}', extra: recipe),
                       ),
                     );
                   },
@@ -149,8 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: 3,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (_, __) => Shimmer.fromColors(
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        itemBuilder: (_, _) => Shimmer.fromColors(
           baseColor: AppColors.border,
           highlightColor: Colors.white,
           child: Container(
