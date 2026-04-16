@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +34,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _finish() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_done', true);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      await prefs.setBool('onboarding_done_$uid', true);
+    }
     if (!mounted) return;
     context.go('/home');
   }
@@ -105,7 +109,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   onPressed: () {
                     if (_index == _slides.length - 1) {
@@ -119,7 +125,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                   child: Text(
                     _index == _slides.length - 1 ? 'Get Started' : 'Next',
-                    style: AppTextStyles.bodyStrong.copyWith(color: Colors.white),
+                    style: AppTextStyles.bodyStrong.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -130,4 +138,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
-

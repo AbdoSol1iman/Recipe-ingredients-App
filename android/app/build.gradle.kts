@@ -42,3 +42,20 @@ android {
 flutter {
     source = "../.."
 }
+
+val googleServicesJson = file("google-services.json")
+if (googleServicesJson.exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.warn("google-services.json not found. Skipping Google Services plugin for this build.")
+    gradle.taskGraph.whenReady {
+        val isReleaseTask = allTasks.any { it.name.contains("Release", ignoreCase = true) }
+        if (isReleaseTask) {
+            throw GradleException(
+                "google-services.json is required for release builds. " +
+                    "Place it at android/app/google-services.json.",
+            )
+        }
+    }
+}
+

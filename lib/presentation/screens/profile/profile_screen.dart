@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constants/app_text_styles.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/saved_provider.dart';
 import '../../providers/search_provider.dart';
 import '../../widgets/bottom_nav_bar.dart';
@@ -20,14 +22,16 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const CircleAvatar(
-            radius: 38,
-            child: Icon(Icons.person, size: 40),
-          ),
+          const CircleAvatar(radius: 38, child: Icon(Icons.person, size: 40)),
           const SizedBox(height: 12),
           Center(child: Text('Guest Chef', style: AppTextStyles.heading2)),
           const SizedBox(height: 4),
-          Center(child: Text('Saved recipes: $savedCount', style: AppTextStyles.body)),
+          Center(
+            child: Text(
+              'Saved recipes: $savedCount',
+              style: AppTextStyles.body,
+            ),
+          ),
           const SizedBox(height: 24),
           ListTile(
             leading: const Icon(Icons.restaurant_menu_outlined),
@@ -46,6 +50,15 @@ class ProfileScreen extends StatelessWidget {
             leading: Icon(Icons.info_outline),
             title: Text('About'),
             subtitle: Text('Wasfty v1.0.0'),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Sign out'),
+            onTap: () async {
+              await context.read<AuthProvider>().signOut();
+              if (context.mounted) context.go('/login');
+            },
           ),
         ],
       ),

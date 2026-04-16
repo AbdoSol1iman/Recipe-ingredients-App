@@ -267,6 +267,27 @@ flutter pub get
 flutter run
 ```
 
+### Firebase Authentication Setup (Required for Login/Signup)
+
+1. Create a Firebase project and add Android + iOS apps.
+2. Enable `Authentication` -> `Sign-in method` -> `Email/Password`.
+3. Download and place config files:
+   - Android: `android/app/google-services.json`
+   - iOS: `ios/Runner/GoogleService-Info.plist`
+4. Generate Flutter Firebase options and update app config:
+
+```zsh
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
+
+5. Re-fetch packages and run:
+
+```zsh
+flutter pub get
+flutter run
+```
+
 ### Test
 
 ```zsh
