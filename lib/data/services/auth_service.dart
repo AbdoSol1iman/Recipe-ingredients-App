@@ -88,7 +88,7 @@ class AuthService {
       case 'too-many-requests':
         return 'Too many attempts. Try again later.';
       case 'not-configured':
-        return 'Firebase config is missing. Add google-services.json and try again.';
+        return 'Firebase is unavailable for this run. Make sure Firebase is configured and run on Android/iOS.';
       default:
         return e.message ?? 'Authentication failed. Please try again.';
     }

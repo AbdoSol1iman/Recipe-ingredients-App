@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'data/repositories/recipe_repository.dart';
 import 'data/services/auth_service.dart';
 import 'data/services/recipe_service.dart';
+import 'firebase_options.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/recipe_provider.dart';
 import 'presentation/providers/saved_provider.dart';
@@ -18,7 +19,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env').catchError((_) {});
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (_) {
     // Allow non-Firebase local builds to start; auth will show a clear message.
   }
