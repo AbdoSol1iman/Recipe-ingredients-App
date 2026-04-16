@@ -106,11 +106,10 @@ A smooth recipe experience helps users:
 ### Quick Demo
 
 <p align="center">
-  <img src="docs/images/splash-screen.png" alt="Splash Screen" width="200" style="margin: 10px;"/>
-  <img src="docs/images/search-screen.png" alt="Search Screen" width="200" style="margin: 10px;"/>
-  <img src="docs/images/saved-screen.png" alt="Saved Screen" width="200" style="margin: 10px;"/>
-  <br/>
-  <em>TODO: Replace placeholders with your actual app flow screenshots.</em>
+  <img src="docs/images/onboarding-discover.jpg" alt="Onboarding Screen" width="180" style="margin: 8px;"/>
+  <img src="docs/images/login-screen.jpg" alt="Login Screen" width="180" style="margin: 8px;"/>
+  <img src="docs/images/search-koshari-screen.jpg" alt="Search Screen" width="180" style="margin: 8px;"/>
+  <img src="docs/images/saved-screen.jpg" alt="Saved Screen" width="180" style="margin: 8px;"/>
 </p>
 
 **Run locally:**
@@ -125,17 +124,27 @@ flutter run
 
 ## Screenshots Gallery
 
-> Add your final images under `docs/images/` and replace these placeholders before submission.
+Latest mobile screenshots used in this README:
 
 ### Core Screens
 
-- `docs/images/splash-screen.png` (TODO)
-- `docs/images/onboarding-screen.png` (TODO)
-- `docs/images/home-screen.png` (TODO)
-- `docs/images/search-screen.png` (TODO)
-- `docs/images/recipe-detail-screen.png` (TODO)
-- `docs/images/saved-screen.png` (TODO)
-- `docs/images/profile-screen.png` (TODO)
+- `docs/images/onboarding-discover.jpg`
+- `docs/images/profile-screen.jpg`
+- `docs/images/login-screen.jpg`
+- `docs/images/search-koshari-screen.jpg`
+- `docs/images/saved-screen.jpg`
+- `docs/images/login-keyboard-screen.jpg`
+- `docs/images/signup-keyboard-screen.jpg`
+
+<p align="center">
+  <img src="docs/images/onboarding-discover.jpg" alt="Onboarding" width="180" style="margin: 8px;"/>
+  <img src="docs/images/profile-screen.jpg" alt="Profile" width="180" style="margin: 8px;"/>
+  <img src="docs/images/login-screen.jpg" alt="Login" width="180" style="margin: 8px;"/>
+  <img src="docs/images/search-koshari-screen.jpg" alt="Search" width="180" style="margin: 8px;"/>
+  <img src="docs/images/saved-screen.jpg" alt="Saved" width="180" style="margin: 8px;"/>
+  <img src="docs/images/login-keyboard-screen.jpg" alt="Login Keyboard" width="180" style="margin: 8px;"/>
+  <img src="docs/images/signup-keyboard-screen.jpg" alt="Signup Keyboard" width="180" style="margin: 8px;"/>
+</p>
 
 ---
 
@@ -144,7 +153,7 @@ flutter run
 ### Step 1: Onboarding and Entry
 
 <p align="center">
-  <img src="docs/images/onboarding-screen.png" alt="Step 1 Onboarding" width="320"/>
+  <img src="docs/images/onboarding-discover.jpg" alt="Step 1 Onboarding" width="320"/>
 </p>
 
 **What happens:**
@@ -158,7 +167,7 @@ flutter run
 ### Step 2: Search and Discover
 
 <p align="center">
-  <img src="docs/images/search-screen.png" alt="Step 2 Search" width="320"/>
+  <img src="docs/images/search-koshari-screen.jpg" alt="Step 2 Search" width="320"/>
 </p>
 
 **What happens:**
@@ -172,7 +181,7 @@ flutter run
 ### Step 3: Open Detail and Save
 
 <p align="center">
-  <img src="docs/images/recipe-detail-screen.png" alt="Step 3 Detail" width="320"/>
+  <img src="docs/images/saved-screen.jpg" alt="Step 3 Saved" width="320"/>
 </p>
 
 **What happens:**
