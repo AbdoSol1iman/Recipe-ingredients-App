@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/models/recipe_model.dart';
+import '../presentation/screens/add_recipe/add_recipe_screen.dart';
 import '../presentation/screens/auth/login_screen.dart';
 import '../presentation/screens/auth/sign_up_screen.dart';
 import '../presentation/screens/home/home_screen.dart';
@@ -54,6 +55,10 @@ class AppRouter {
       GoRoute(
         path: '/saved',
         pageBuilder: (_, _) => _fade(const SavedScreen()),
+      ),
+      GoRoute(
+        path: '/add',
+        pageBuilder: (_, _) => _fade(const AddRecipeScreen()),
       ),
       GoRoute(
         path: '/profile',

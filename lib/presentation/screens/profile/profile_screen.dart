@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
     final savedCount = context.watch<SavedProvider>().savedRecipes.length;
 
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(currentIndex: 3),
+      bottomNavigationBar: const AppBottomNavBar(currentIndex: 4),
       appBar: AppBar(title: const Text('Profile')),
       body: ListView(
         padding: const EdgeInsets.all(16),

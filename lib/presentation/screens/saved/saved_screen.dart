@@ -16,7 +16,7 @@ class SavedScreen extends StatelessWidget {
     final recipes = provider.savedRecipes;
 
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(currentIndex: 2),
+      bottomNavigationBar: const AppBottomNavBar(currentIndex: 3),
       appBar: AppBar(title: const Text('Saved Recipes')),
       body: recipes.isEmpty
           ? Center(
@@ -58,7 +58,8 @@ class SavedScreen extends StatelessWidget {
                     heroTag: 'recipe_${recipe.id}',
                     isSaved: true,
                     onSaveTap: () => provider.removeSaved(recipe.id),
-                    onTap: () => context.push('/detail/${recipe.id}', extra: recipe),
+                    onTap: () =>
+                        context.push('/detail/${recipe.id}', extra: recipe),
                   ),
                 );
               },
@@ -66,4 +67,3 @@ class SavedScreen extends StatelessWidget {
     );
   }
 }
-

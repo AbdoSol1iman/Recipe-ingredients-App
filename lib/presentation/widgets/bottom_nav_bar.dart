@@ -13,15 +13,25 @@ class AppBottomNavBar extends StatelessWidget {
     return NavigationBar(
       selectedIndex: currentIndex,
       onDestinationSelected: (index) {
-        const routes = ['/home', '/search', '/saved', '/profile'];
+        const routes = ['/home', '/search', '/add', '/saved', '/profile'];
         context.go(routes[index]);
       },
       indicatorColor: AppColors.primary.withOpacity(0.15),
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
         NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-        NavigationDestination(icon: Icon(Icons.bookmark_border), label: 'Saved'),
-        NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
+        NavigationDestination(
+          icon: Icon(Icons.add_circle_outline),
+          label: 'Add',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.bookmark_border),
+          label: 'Saved',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline),
+          label: 'Profile',
+        ),
       ],
     );
   }
