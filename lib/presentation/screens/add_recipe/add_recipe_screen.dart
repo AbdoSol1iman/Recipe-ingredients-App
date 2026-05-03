@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../providers/saved_provider.dart';
 import '../../widgets/bottom_nav_bar.dart';
 
 class AddRecipeScreen extends StatefulWidget {
@@ -187,29 +189,33 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     }
     if (!validForm) return;
 
-    final recipeData = <String, dynamic>{
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final recipeModel = <String, dynamic>{
+      'id': timestamp,
+      'idMeal': timestamp,
       'title': _titleController.text.trim(),
-      'description': _descriptionController.text.trim(),
-      'imageUrl': _imageUrlController.text.trim(),
-      'category': _selectedCategory,
-      'cookTimeMinutes': int.parse(_cookTimeController.text.trim()),
-      'ingredients': List<String>.from(_ingredients),
-      'steps': List<String>.from(_steps),
-      'createdAt': DateTime.now().toIso8601String(),
+      'strMeal': _titleController.text.trim(),
+      'image': _imageUrlController.text.trim(),
+      'strMealThumb': _imageUrlController.text.trim(),
+      'readyInMinutes': int.parse(_cookTimeController.text.trim()),
+      'servings': 1,
+      'diets': [_selectedCategory],
+      'dishTypes': _steps,
+      'ingredients': _ingredients,
     };
 
     try {
-      final recipeBox = await Hive.openBox('submitted_recipes');
-      final key = DateTime.now().millisecondsSinceEpoch.toString();
-      await recipeBox.put(key, recipeData);
+      final savedBox = await Hive.openBox('saved_recipes');
+      await savedBox.put(timestamp.toString(), recipeModel);
+      if (mounted) {
+        context.read<SavedProvider>().reloadSaved();
+      }
     } on HiveError catch (error) {
-      _showMessage('Could not save recipe locally: $error');
+      _showMessage('Could not save recipe: $error');
       return;
     }
 
-    _showMessage(
-      'Recipe saved locally. Share with Wasfty will be a feature soon.',
-    );
+    _showMessage('Recipe saved to Favourite! Check the Saved Recipes page.');
     _clearForm();
   }
 

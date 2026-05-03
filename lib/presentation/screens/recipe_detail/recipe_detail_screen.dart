@@ -52,6 +52,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
       error = null;
     });
     try {
+      final fallback = widget.fallback;
+      // For locally created recipes (IDs are timestamps), use fallback data
+      if (fallback != null && fallback.id > 10000000) {
+        setState(() {
+          detail = null;
+          similar = [];
+          isLoading = false;
+        });
+        return;
+      }
+
       final repository = context.read<RecipeRepository>();
       final loadedDetail = await repository.getRecipeDetail(widget.id);
       final loadedSimilar = await repository.getSimilarRecipes(widget.id);
@@ -85,6 +96,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
     final title = data?.title ?? fallback?.title ?? 'Recipe';
     final ready = data?.readyInMinutes ?? fallback?.readyInMinutes ?? 0;
     final servings = data?.servings ?? fallback?.servings ?? 0;
+    final isLocalRecipe = fallback != null && fallback.id > 10000000;
     final isSaved =
         fallback != null && context.watch<SavedProvider>().isSaved(fallback.id);
 
@@ -214,22 +226,25 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
                                     .toList(),
                               ),
                               ListView(
-                                children: (data?.instructions ?? const [])
-                                    .asMap()
-                                    .entries
-                                    .map(
-                                      (entry) => ListTile(
-                                        leading: CircleAvatar(
-                                          radius: 12,
-                                          child: Text('${entry.key + 1}'),
-                                        ),
-                                        title: Text(
-                                          entry.value,
-                                          style: AppTextStyles.body,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                children:
+                                    (isLocalRecipe
+                                            ? (fallback.dishTypes)
+                                            : (data?.instructions ?? const []))
+                                        .asMap()
+                                        .entries
+                                        .map(
+                                          (entry) => ListTile(
+                                            leading: CircleAvatar(
+                                              radius: 12,
+                                              child: Text('${entry.key + 1}'),
+                                            ),
+                                            title: Text(
+                                              entry.value,
+                                              style: AppTextStyles.body,
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
                               ),
                               GridView.count(
                                 crossAxisCount: 2,

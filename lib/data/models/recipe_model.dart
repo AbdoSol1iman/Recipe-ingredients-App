@@ -1,4 +1,3 @@
-
 class RecipeModel {
   const RecipeModel({
     required this.id,
@@ -24,10 +23,10 @@ class RecipeModel {
       id: int.tryParse(idStr) ?? 0,
       title: (json['strMeal'] ?? json['title'] ?? '').toString(),
       image: (json['strMealThumb'] ?? json['image'] ?? '').toString(),
-      readyInMinutes: 30,
-      servings: 1,
-      diets: const [],
-      dishTypes: [(json['strCategory'] ?? '').toString()],
+      readyInMinutes: json['readyInMinutes'] ?? 30,
+      servings: json['servings'] ?? 1,
+      diets: List<String>.from(json['diets'] ?? []),
+      dishTypes: List<String>.from(json['dishTypes'] ?? []),
     );
   }
 

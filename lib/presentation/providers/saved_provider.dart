@@ -18,10 +18,16 @@ class SavedProvider extends ChangeNotifier {
       ..clear()
       ..addAll(
         _box.values
-            .map((e) => RecipeModel.fromJson(Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) => RecipeModel.fromJson(Map<String, dynamic>.from(e as Map)),
+            )
             .toList(),
       );
     notifyListeners();
+  }
+
+  void reloadSaved() {
+    _loadSaved();
   }
 
   bool isSaved(int recipeId) {
@@ -43,4 +49,3 @@ class SavedProvider extends ChangeNotifier {
     _loadSaved();
   }
 }
-
