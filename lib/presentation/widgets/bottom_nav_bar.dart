@@ -16,7 +16,7 @@ class AppBottomNavBar extends StatelessWidget {
         const routes = ['/home', '/search', '/add', '/saved', '/profile'];
         context.go(routes[index]);
       },
-      indicatorColor: AppColors.primary.withOpacity(0.15),
+      indicatorColor: AppColors.primary.withValues(alpha: 0.15),
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
         NavigationDestination(icon: Icon(Icons.search), label: 'Search'),

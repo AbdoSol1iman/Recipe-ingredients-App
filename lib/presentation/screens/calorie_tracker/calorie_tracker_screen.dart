@@ -10,8 +10,10 @@ class Food {
 }
 
 class CalorieTrackerScreen extends StatefulWidget {
+  const CalorieTrackerScreen({super.key});
+
   @override
-  _CalorieTrackerScreenState createState() => _CalorieTrackerScreenState();
+  State<CalorieTrackerScreen> createState() => _CalorieTrackerScreenState();
 }
 
 class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
@@ -78,6 +80,12 @@ class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
   TextEditingController gramsController = TextEditingController();
 
   double result = 0;
+
+  @override
+  void dispose() {
+    gramsController.dispose();
+    super.dispose();
+  }
 
   List<Food> get filteredFoods {
     if (selectedCategory == "All") return foods;

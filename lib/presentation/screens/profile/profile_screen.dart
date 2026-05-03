@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wasftk/presentation/screens/auth/login_screen.dart';
-import 'package:wasftk/presentation/screens/bmi/bmi_Screen.dart';
+import 'package:wasftk/presentation/screens/bmi/bmi_screen.dart';
 import 'package:wasftk/presentation/screens/calorie_tracker/calorie_tracker_screen.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../providers/saved_provider.dart';

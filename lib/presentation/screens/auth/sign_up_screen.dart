@@ -94,6 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: 22),
                         TextFormField(
                           controller: _nameController,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration(
                             'Username',
                             Icons.account_circle,
@@ -109,6 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration(
                             'Email',
                             Icons.alternate_email,
@@ -128,6 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration('Password', Icons.key),
                           validator: (value) {
                             final v = value ?? '';
@@ -144,6 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: _confirmController,
                           obscureText: true,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration(
                             'Confirm Password',
                             Icons.key,

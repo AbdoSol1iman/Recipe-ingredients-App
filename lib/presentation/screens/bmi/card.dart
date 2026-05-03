@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:wasftk/presentation/screens/bmi/constants.dart';
 
 class AppCard extends StatelessWidget {
-  final BorderSide? borderSide;
-  final double height;
-  final double width;
-  final Column child;
   const AppCard({
-    Key? key,
+    super.key,
     required this.child,
     this.borderSide,
     this.height = 190,
     this.width = 180,
-  }) : super(key: key);
+  });
+
+  final BorderSide? borderSide;
+  final double height;
+  final double width;
+  final Column child;
 
   @override
   Widget build(BuildContext context) {

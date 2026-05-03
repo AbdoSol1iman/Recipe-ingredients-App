@@ -106,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration(
                             'Email',
                             Icons.alternate_email,
@@ -125,6 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
+                          style: AppTextStyles.bodyStrong,
                           decoration: _inputDecoration('Password', Icons.key),
                           validator: (value) {
                             if ((value ?? '').isEmpty) {

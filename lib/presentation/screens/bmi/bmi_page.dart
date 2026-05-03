@@ -4,7 +4,7 @@ import 'package:wasftk/presentation/screens/bmi/card.dart';
 import 'package:wasftk/presentation/screens/bmi/constants.dart';
 
 class BmiPage extends StatefulWidget {
-  const BmiPage({Key? key}) : super(key: key);
+  const BmiPage({super.key});
 
   @override
   State<BmiPage> createState() => _InputPageState();
@@ -164,10 +164,10 @@ class _InputPageState extends State<BmiPage> {
                       height: 80,
                       width: 130,
                       decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(.18),
+                        color: Colors.grey.withValues(alpha: .18),
                         border: Border.all(
                           width: 2,
-                          color: Colors.grey.withOpacity(.3),
+                          color: Colors.grey.withValues(alpha: .3),
                         ),
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -292,7 +292,7 @@ class _InputPageState extends State<BmiPage> {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18,
-                              color: Colors.white.withOpacity(.8),
+                              color: Colors.white.withValues(alpha: .8),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -310,7 +310,7 @@ class _InputPageState extends State<BmiPage> {
                               height: 1.5,
                               fontWeight: FontWeight.w400,
                               fontSize: 16,
-                              color: Colors.white.withOpacity(.8),
+                              color: Colors.white.withValues(alpha: .8),
                             ),
                           ),
                           const SizedBox(height: 30),
@@ -347,12 +347,13 @@ class _InputPageState extends State<BmiPage> {
 }
 
 double bmi = 18;
-calculateBMI(int height, int weight) {
+
+String calculateBMI(int height, int weight) {
   bmi = weight / (height * height) * 10000;
   return bmi.toStringAsFixed(1);
 }
 
-bmiResult() {
+String bmiResult() {
   if (bmi < 18.5) {
     return '(Underweight)';
   } else if (bmi >= 18.5 && bmi < 25) {
@@ -364,7 +365,7 @@ bmiResult() {
   }
 }
 
-bmiFeedBack() {
+String bmiFeedBack() {
   if (bmi < 18.5) {
     return 'A BMI of less than 18.5 indicates that you are underweight, so you may need to put on some weight. You are recommended to ask your doctor or a dietitian for advice.';
   } else if (bmi >= 18.5 && bmi < 25) {

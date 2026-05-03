@@ -27,6 +27,7 @@ Future<void> main() async {
   }
   await Hive.initFlutter();
   final savedBox = await Hive.openBox('saved_recipes');
+  await Hive.openBox('submitted_recipes');
 
   final authService = AuthService();
   final service = RecipeService();

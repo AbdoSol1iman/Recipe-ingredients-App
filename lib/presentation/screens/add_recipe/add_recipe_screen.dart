@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../widgets/bottom_nav_bar.dart';
-
-enum _PostType { recipe, post }
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});
@@ -18,20 +17,25 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
-  final _categoryController = TextEditingController();
   final _cookTimeController = TextEditingController();
   final _ingredientController = TextEditingController();
   final _stepController = TextEditingController();
   final List<String> _ingredients = [];
   final List<String> _steps = [];
-  _PostType _postType = _PostType.recipe;
+  static const List<String> _categories = [
+    'Main Course',
+    'Breakfast',
+    'Dessert',
+    'Salad',
+    'Soup',
+  ];
+  String? _selectedCategory;
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     _imageUrlController.dispose();
-    _categoryController.dispose();
     _cookTimeController.dispose();
     _ingredientController.dispose();
     _stepController.dispose();
@@ -40,43 +44,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isRecipe = _postType == _PostType.recipe;
-
     return Scaffold(
       bottomNavigationBar: const AppBottomNavBar(currentIndex: 2),
-      appBar: AppBar(title: const Text('Add your recipe or post')),
+      appBar: AppBar(title: const Text('Add your recipe')),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _HeaderCard(isRecipe: isRecipe),
-              const SizedBox(height: 16),
-              SegmentedButton<_PostType>(
-                segments: const [
-                  ButtonSegment(
-                    value: _PostType.recipe,
-                    label: Text('Recipe'),
-                    icon: Icon(Icons.restaurant_menu),
-                  ),
-                  ButtonSegment(
-                    value: _PostType.post,
-                    label: Text('Post'),
-                    icon: Icon(Icons.article_outlined),
-                  ),
-                ],
-                selected: {_postType},
-                onSelectionChanged: (selection) {
-                  setState(() => _postType = selection.first);
-                },
-              ),
+              const _HeaderCard(),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _titleController,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  labelText: isRecipe ? 'Recipe title' : 'Post title',
+                  labelText: 'Recipe title',
                   prefixIcon: const Icon(Icons.title),
                 ),
                 validator: (value) => _required(value, 'Add a title'),
@@ -87,9 +70,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 minLines: 3,
                 maxLines: 5,
                 decoration: InputDecoration(
-                  labelText: isRecipe
-                      ? 'Short description'
-                      : 'What do you want to share?',
+                  labelText: 'Short description',
                   alignLabelWithHint: true,
                   prefixIcon: const Icon(Icons.notes_outlined),
                 ),
@@ -106,60 +87,67 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              if (isRecipe) ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _categoryController,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Category',
-                          prefixIcon: Icon(Icons.category_outlined),
-                        ),
-                        validator: (value) =>
-                            _required(value, 'Add a category'),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: _selectedCategory,
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                        prefixIcon: Icon(Icons.category_outlined),
                       ),
+                      items: _categories
+                          .map(
+                            (category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(category),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() => _selectedCategory = value);
+                      },
+                      validator: (value) =>
+                          value == null ? 'Add a category' : null,
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _cookTimeController,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Cook time',
-                          suffixText: 'min',
-                        ),
-                        validator: _validateCookTime,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _cookTimeController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'Cook time',
+                        suffixText: 'min',
                       ),
+                      validator: _validateCookTime,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                _EditableListSection(
-                  title: 'Ingredients',
-                  hintText: 'Add ingredient',
-                  icon: Icons.add_circle_outline,
-                  controller: _ingredientController,
-                  values: _ingredients,
-                  onAdd: () =>
-                      _addListItem(_ingredientController, _ingredients),
-                  onRemove: (index) =>
-                      setState(() => _ingredients.removeAt(index)),
-                ),
-                const SizedBox(height: 18),
-                _EditableListSection(
-                  title: 'Steps',
-                  hintText: 'Add cooking step',
-                  icon: Icons.playlist_add,
-                  controller: _stepController,
-                  values: _steps,
-                  numbered: true,
-                  onAdd: () => _addListItem(_stepController, _steps),
-                  onRemove: (index) => setState(() => _steps.removeAt(index)),
-                ),
-              ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              _EditableListSection(
+                title: 'Ingredients',
+                hintText: 'Add ingredient',
+                icon: Icons.add_circle_outline,
+                controller: _ingredientController,
+                values: _ingredients,
+                onAdd: () => _addListItem(_ingredientController, _ingredients),
+                onRemove: (index) =>
+                    setState(() => _ingredients.removeAt(index)),
+              ),
+              const SizedBox(height: 18),
+              _EditableListSection(
+                title: 'Steps',
+                hintText: 'Add cooking step',
+                icon: Icons.playlist_add,
+                controller: _stepController,
+                values: _steps,
+                numbered: true,
+                onAdd: () => _addListItem(_stepController, _steps),
+                onRemove: (index) => setState(() => _steps.removeAt(index)),
+              ),
               const SizedBox(height: 22),
               FilledButton.icon(
                 style: FilledButton.styleFrom(
@@ -168,7 +156,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 ),
                 onPressed: _submit,
                 icon: const Icon(Icons.send_outlined),
-                label: Text(isRecipe ? 'Submit recipe' : 'Publish post'),
+                label: const Text('Submit recipe'),
               ),
             ],
           ),
@@ -186,24 +174,41 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     });
   }
 
-  void _submit() {
-    final isRecipe = _postType == _PostType.recipe;
+  Future<void> _submit() async {
     final validForm = _formKey.currentState?.validate() ?? false;
 
-    if (isRecipe && _ingredients.isEmpty) {
+    if (_ingredients.isEmpty) {
       _showMessage('Add at least one ingredient.');
       return;
     }
-    if (isRecipe && _steps.isEmpty) {
+    if (_steps.isEmpty) {
       _showMessage('Add at least one cooking step.');
       return;
     }
     if (!validForm) return;
 
+    final recipeData = <String, dynamic>{
+      'title': _titleController.text.trim(),
+      'description': _descriptionController.text.trim(),
+      'imageUrl': _imageUrlController.text.trim(),
+      'category': _selectedCategory,
+      'cookTimeMinutes': int.parse(_cookTimeController.text.trim()),
+      'ingredients': List<String>.from(_ingredients),
+      'steps': List<String>.from(_steps),
+      'createdAt': DateTime.now().toIso8601String(),
+    };
+
+    try {
+      final recipeBox = await Hive.openBox('submitted_recipes');
+      final key = DateTime.now().millisecondsSinceEpoch.toString();
+      await recipeBox.put(key, recipeData);
+    } on HiveError catch (error) {
+      _showMessage('Could not save recipe locally: $error');
+      return;
+    }
+
     _showMessage(
-      isRecipe
-          ? 'Recipe draft is ready. Backend publishing is not connected yet.'
-          : 'Post draft is ready. Backend publishing is not connected yet.',
+      'Recipe saved locally. Share with Wasfty will be a feature soon.',
     );
     _clearForm();
   }
@@ -212,11 +217,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     _titleController.clear();
     _descriptionController.clear();
     _imageUrlController.clear();
-    _categoryController.clear();
     _cookTimeController.clear();
     _ingredientController.clear();
     _stepController.clear();
     setState(() {
+      _selectedCategory = null;
       _ingredients.clear();
       _steps.clear();
     });
@@ -242,28 +247,23 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 }
 
 class _HeaderCard extends StatelessWidget {
-  const _HeaderCard({required this.isRecipe});
-
-  final bool isRecipe;
+  const _HeaderCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.12),
+        color: AppColors.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primary.withOpacity(0.18)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.18)),
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 26,
             backgroundColor: AppColors.primary,
-            child: Icon(
-              isRecipe ? Icons.restaurant_menu : Icons.article_outlined,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.restaurant_menu, color: Colors.white),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -273,9 +273,7 @@ class _HeaderCard extends StatelessWidget {
                 Text('Share with Wasfty', style: AppTextStyles.title),
                 const SizedBox(height: 4),
                 Text(
-                  isRecipe
-                      ? 'Add ingredients and steps for your own dish.'
-                      : 'Share a cooking tip, story, or food update.',
+                  'Share with Wasfty will be a feature soon.',
                   style: AppTextStyles.body,
                 ),
               ],
