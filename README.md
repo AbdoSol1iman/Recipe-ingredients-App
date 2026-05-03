@@ -278,24 +278,49 @@ flutter run
 
 ### Firebase Authentication Setup (Required for Login/Signup)
 
-1. Create a Firebase project and add Android + iOS apps.
-2. Enable `Authentication` -> `Sign-in method` -> `Email/Password`.
-3. Download and place config files:
-   - Android: `android/app/google-services.json`
-   - iOS: `ios/Runner/GoogleService-Info.plist`
-4. Generate Flutter Firebase options and update app config:
+**⚠️ Important**: `firebase_options.dart` is not committed to the repository. You must generate it yourself.
 
-```zsh
+#### Step 1: Create a Firebase Project
+1. Go to [Firebase Console](https://console.firebase.google.com)
+2. Create a new project (or use existing)
+3. Add Android app:
+   - Package name: `com.example.wasftk`
+   - Download `google-services.json` → Place in `android/app/`
+4. Add iOS app (if developing for iOS)
+   - Bundle ID: `com.example.wasftk`
+   - Download `GoogleService-Info.plist` → Place in `ios/Runner/`
+
+#### Step 2: Enable Authentication
+1. In Firebase Console → **Authentication**
+2. Click **Get Started**
+3. Enable **Email/Password** sign-in method
+
+#### Step 3: Generate Flutter Firebase Config
+```bash
+# Install FlutterFire CLI (one-time)
 dart pub global activate flutterfire_cli
+
+# Generate firebase_options.dart for your Firebase project
 flutterfire configure
+
+# Follow prompts to select your Firebase project and platforms
 ```
 
-5. Re-fetch packages and run:
+This command will **automatically generate** `lib/firebase_options.dart` with your project credentials.
 
-```zsh
+#### Step 4: Get Dependencies & Run
+```bash
 flutter pub get
 flutter run
 ```
+
+#### Troubleshooting Firebase Setup
+- If `flutterfire configure` fails, ensure you're logged into Firebase CLI:
+  ```bash
+  firebase login
+  ```
+- If you already have `google-services.json` in `android/app/`, Firebase will detect it automatically
+- Different developers should each run `flutterfire configure` with their own Firebase projects or shared project credentials
 
 ### Test
 

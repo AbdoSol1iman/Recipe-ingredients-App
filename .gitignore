@@ -43,4 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase configuration (auto-generated, DO NOT commit credentials)
+# See README.md for setup instructions
 lib/firebase_options.dart
