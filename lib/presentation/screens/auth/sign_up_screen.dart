@@ -175,7 +175,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : const Text('Sign up'),
+                                : const Text(
+                                    'Sign up',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                         ),
                         const SizedBox(height: 16),

@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-
 import 'core/theme/app_theme.dart';
 import 'data/repositories/recipe_repository.dart';
 import 'data/services/auth_service.dart';
@@ -27,7 +26,6 @@ Future<void> main() async {
   }
   await Hive.initFlutter();
   final savedBox = await Hive.openBox('saved_recipes');
-
   final authService = AuthService();
   final service = RecipeService();
   final repository = RecipeRepository(service);
