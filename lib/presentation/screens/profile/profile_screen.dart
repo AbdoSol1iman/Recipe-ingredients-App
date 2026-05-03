@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:wasftk/presentation/screens/auth/login_screen.dart';
+import 'package:wasftk/presentation/screens/bmi/bmi_Screen.dart';
+import 'package:wasftk/presentation/screens/calorie_tracker/calorie_tracker_screen.dart';
 import '../../../core/constants/app_text_styles.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/saved_provider.dart';
 import '../../providers/search_provider.dart';
 import '../../widgets/bottom_nav_bar.dart';
@@ -40,10 +40,28 @@ class ProfileScreen extends StatelessWidget {
             onTap: () => _openDietDialog(context),
           ),
           const Divider(),
-          const ListTile(
-            leading: Icon(Icons.notifications_none),
-            title: Text('Notifications'),
+          ListTile(
+            leading: Icon(Icons.monitor_weight_outlined),
+            title: Text('BMI Calculator'),
             trailing: Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BmiAppScreen()),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(Icons.local_fire_department_outlined),
+            title: Text('Calorie Tracker'),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => CalorieTrackerScreen()),
+              );
+            },
           ),
           const Divider(),
           const ListTile(
@@ -52,13 +70,35 @@ class ProfileScreen extends StatelessWidget {
             subtitle: Text('Wasfty v1.0.0'),
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Sign out'),
-            onTap: () async {
-              await context.read<AuthProvider>().signOut();
-              if (context.mounted) context.go('/login');
-            },
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.red[50],
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: ListTile(
+              leading: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.red[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.logout, color: Colors.red),
+              ),
+              title: Text(
+                "Logout",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
           ),
         ],
       ),
