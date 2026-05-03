@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildLoadingRow()
               else
                 SizedBox(
-                  height: 245,
+                  height: 210,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: provider.popularRecipes.length,
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   (recipe) {
                     final isSaved = context.watch<SavedProvider>().isSaved(recipe.id);
                     return SizedBox(
-                      height: 230,
+                      height: 210,
                       child: RecipeCard(
                         recipe: recipe,
                         heroTag: 'recipe_${recipe.id}',
